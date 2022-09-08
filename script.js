@@ -4,7 +4,7 @@ let mayinTarlasi = document.querySelector('.mayin-container');
 
 let countOfButton;
 let countOfBomb;
-let id = 1;
+let score = 0;
 const numbers = /[0-9]/g;
 
 input.addEventListener('keyup', function(e){
@@ -14,10 +14,9 @@ input.addEventListener('keyup', function(e){
 })
 
 startButton.addEventListener('click', () => {
-
     //  refresh everything for next game;
     countOfBomb = 0;
-    id = 1;
+    score = 0;
     startButton.disabled  = true;
     mayinTarlasi.innerHTML = '';
     countOfButton = input.value ** 2;
@@ -34,16 +33,15 @@ function createButtons(countOfButton){
     // add buttons
     for(let i=1; i<=countOfButton; i++ ){
         mayinTarlasi.innerHTML += `
-            <div class="bomb-container" data-id="${id}">
-                <button class="bomb-button" data-id="${id}" onclick="showBomb( '${id}' )"></button>
+            <div class="bomb-container" data-id="${i}">
+                <button class="bomb-button" onclick="showBomb('${i}')"></button>
             </div>
         `
-        id++;
     }
     // create number of bombs
     countOfBomb = countOfButton * 10 /100; 
 
-    for(i=1; i<=countOfBomb; i++){
+    for(let i=1; i<=countOfBomb; i++){
         // call function for placing of bombs
         createBombs();
     }
@@ -69,8 +67,27 @@ function createBombs(){
 
 
 function showBomb(id){
-    document.getElementById(`1`);
+    score++;
+    let divId = document.querySelector(`[data-id="${id}"]`);
+    let buttonDiv = divId.querySelector('.bomb-button');
+    let bombDiv = divId.querySelector('.bomb');
 
-    console.log(document.getElementById(`1`));
+    if(divId.contains(bombDiv)){
+        buttonDiv.style.display = 'none';
+
+        document.querySelectorAll('.bomb').forEach((el) => {
+            el.previousElementSibling.style.display = 'none';
+
+            document.querySelectorAll('.bomb-button').forEach((btn) => {
+                btn.disabled = 'true';
+                btn.style.backgroundColor = 'skyblue';
+                localStorage.setItem('Score: ', `${score}`);
+            })
+        })
+    }
+    else{
+        buttonDiv.style.backgroundColor = 'skyblue';
+        buttonDiv.disabled = true;
+    }
 }
 
